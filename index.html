@@ -5,11 +5,7 @@
 <title>Dark332 Hubs</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* {margin:0;padding:0;box-sizing:border-box;}
 
 body {
   font-family: Arial, sans-serif;
@@ -21,7 +17,6 @@ body {
   min-height: 100vh;
 }
 
-/* Container */
 .container {
   width: 95%;
   max-width: 600px;
@@ -29,18 +24,9 @@ body {
   animation: fadeIn 1s ease;
 }
 
-/* Título */
-h1 {
-  font-size: 28px;
-  margin-bottom: 5px;
-}
+h1 {font-size: 28px;margin-bottom: 5px;}
+.subtitle {color: #94a3b8;margin-bottom: 20px;}
 
-p.subtitle {
-  color: #94a3b8;
-  margin-bottom: 20px;
-}
-
-/* Caixa */
 textarea {
   width: 100%;
   height: 180px;
@@ -49,10 +35,8 @@ textarea {
   padding: 10px;
   background: #020617;
   color: #38bdf8;
-  resize: none;
 }
 
-/* Botões */
 .buttons {
   display: flex;
   gap: 10px;
@@ -64,56 +48,18 @@ button {
   padding: 12px;
   border: none;
   border-radius: 10px;
-  font-size: 14px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.publish {
-  background: #22c55e;
-  color: white;
-}
+.publish {background:#22c55e;color:white;}
+.clear {background:#ef4444;color:white;}
 
-.clear {
-  background: #ef4444;
-  color: white;
-}
+#link {margin-top:15px;word-break:break-all;}
+a {color:#38bdf8;}
 
-button:hover {
-  transform: scale(1.05);
-}
-
-/* Link */
-#link {
-  margin-top: 15px;
-  word-break: break-all;
-}
-
-a {
-  color: #38bdf8;
-}
-
-/* Animação */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsivo */
-@media (max-width: 500px) {
-  h1 {
-    font-size: 22px;
-  }
-
-  textarea {
-    height: 150px;
-  }
+  from {opacity:0;transform:translateY(20px);}
+  to {opacity:1;transform:translateY(0);}
 }
 </style>
 </head>
@@ -143,56 +89,19 @@ async function publicar() {
     return;
   }
 
-  // ========== PROTEÇÃO CONTRA CÓDIGO MALICIOSO ==========
-  // Remove tags <script> inteiras
-  codigo = codigo.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-  
-  // Remove eventos HTML (onclick, onload, onerror, etc)
-  codigo = codigo.replace(/on\w+="[^"]*"/gi, '');
-  codigo = codigo.replace(/on\w+='[^']*'/gi, '');
-  
-  // Remove javascript: nos links
-  codigo = codigo.replace(/javascript:/gi, '');
-  
-  // Remove iframes maliciosos
-  codigo = codigo.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
-  
-  // Remove objetos embed e applet
-  codigo = codigo.replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '');
-  codigo = codigo.replace(/<applet\b[^<]*(?:(?!<\/applet>)<[^<]*)*<\/applet>/gi, '');
-  // =====================================================
+  let id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2,10);
 
-  // ========== ID SEGURO ==========
-  // Usa ID único e imprevisível (mais seguro que Math.random)
-  let id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
-  // ===============================
+  await fetch("https://servidor-130c0-default-rtdb.firebaseio.com/sites/" + id + ".json", {
+    method: "PUT",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ html: codigo })
+  });
 
-  // ========== SALVAR NO FIREBASE ==========
-  try {
-    await fetch("https://servidor-130c0-default-rtdb.firebaseio.com/sites/" + id + ".json", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        html: codigo,
-        timestamp: Date.now()  // Adiciona data para controle
-      })
-    });
+  let base = window.location.href.replace("index.html", "");
+  let url = base + "view.html?id=" + id;
 
-    let base = window.location.href.replace("index.html", "");
-    let url = base + "view.html?id=" + id;
-
-    document.getElementById("link").innerHTML = "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
-    
-    // Mostra mensagem de sucesso
-    document.getElementById("link").innerHTML =
-"✅ Link criado:<br><a href='" + url + "' target='_blank'>" + url + "</a>";
-    
-  } catch (erro) {
-    alert("❌ Erro ao publicar: " + erro.message);
-  }
-  // =========================================
+  document.getElementById("link").innerHTML =
+  "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
 }
 
 function limpar() {
