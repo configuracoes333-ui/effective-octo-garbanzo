@@ -143,18 +143,55 @@ async function publicar() {
     return;
   }
 
-  let id = Math.random().toString(36).substring(2, 8);
+  // ========== PROTEÇÃO CONTRA CÓDIGO MALICIOSO ==========
+  // Remove tags <script> inteiras
+  codigo = codigo.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  
+  // Remove eventos HTML (onclick, onload, onerror, etc)
+  codigo = codigo.replace(/on\w+="[^"]*"/gi, '');
+  codigo = codigo.replace(/on\w+='[^']*'/gi, '');
+  
+  // Remove javascript: nos links
+  codigo = codigo.replace(/javascript:/gi, '');
+  
+  // Remove iframes maliciosos
+  codigo = codigo.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+  
+  // Remove objetos embed e applet
+  codigo = codigo.replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '');
+  codigo = codigo.replace(/<applet\b[^<]*(?:(?!<\/applet>)<[^<]*)*<\/applet>/gi, '');
+  // =====================================================
 
-  await fetch("https://servidor-130c0-default-rtdb.firebaseio.com/sites/" + id + ".json", {
-    method: "PUT",
-    body: JSON.stringify({ html: codigo })
-  });
+  // ========== ID SEGURO ==========
+  // Usa ID único e imprevisível (mais seguro que Math.random)
+  let id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+  // ===============================
 
-  let base = window.location.href.replace("index.html", "");
-  let url = base + "view.html?id=" + id;
+  // ========== SALVAR NO FIREBASE ==========
+  try {
+    await fetch("https://servidor-130c0-default-rtdb.firebaseio.com/sites/" + id + ".json", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        html: codigo,
+        timestamp: Date.now()  // Adiciona data para controle
+      })
+    });
 
-  document.getElementById("link").innerHTML =
-    "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
+    let base = window.location.href.replace("index.html", "");
+    let url = base + "view.html?id=" + id;
+
+    document.getElementById("link").innerHTML = "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
+    
+    // Mostra mensagem de sucesso
+    alert("✅ Site publicado com sucesso!");
+    
+  } catch (erro) {
+    alert("❌ Erro ao publicar: " + erro.message);
+  }
+  // =========================================
 }
 
 function limpar() {
