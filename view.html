@@ -2,8 +2,6 @@
 <html>
 <body style="margin:0">
 
-<iframe id="frame" style="width:100%; height:100vh; border:none;"></iframe>
-
 <script>
 async function carregar() {
   const params = new URLSearchParams(window.location.search);
@@ -13,7 +11,9 @@ async function carregar() {
   let data = await res.json();
 
   if (data && data.html) {
-    document.getElementById("frame").srcdoc = data.html;
+    document.open();
+    document.write(data.html);
+    document.close();
   } else {
     document.body.innerHTML = "<h2 style='text-align:center'>Erro ao carregar 😢</h2>";
   }
