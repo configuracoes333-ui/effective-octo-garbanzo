@@ -1,56 +1,145 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Publicador de Sites</title>
+<title>Dark332 Hubs</title>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial;
-  background: #0f172a;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #020617);
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  width: 95%;
+  max-width: 600px;
   text-align: center;
-  padding: 20px;
+  animation: fadeIn 1s ease;
 }
+
+/* Título */
+h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+p.subtitle {
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+/* Caixa */
 textarea {
-  width: 90%;
-  height: 200px;
-  border-radius: 10px;
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  border: none;
   padding: 10px;
-  border: none;
+  background: #020617;
+  color: #38bdf8;
+  resize: none;
 }
-button {
-  padding: 12px 20px;
+
+/* Botões */
+.buttons {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
   border: none;
   border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.publish {
   background: #22c55e;
   color: white;
-  font-size: 16px;
 }
+
+.clear {
+  background: #ef4444;
+  color: white;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Link */
+#link {
+  margin-top: 15px;
+  word-break: break-all;
+}
+
 a {
   color: #38bdf8;
+}
+
+/* Animação */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 500px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  textarea {
+    height: 150px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<h1>🌐 Criador de Site</h1>
-<p>Cole seu HTML abaixo:</p>
+<div class="container">
+  <h1>Dark332 Hubs</h1>
+  <p class="subtitle">Website Creator</p>
 
-<textarea id="code" placeholder="<h1>Meu site</h1>"></textarea><br>
+  <textarea id="code" placeholder="<h1>Hello world</h1>"></textarea>
 
-<button onclick="publicar()">🚀 Publicar</button>
+  <div class="buttons">
+    <button class="publish" onclick="publicar()">🚀 Publish</button>
+    <button class="clear" onclick="limpar()">🗑 Clear</button>
+  </div>
 
-<p id="link"></p>
+  <p id="link"></p>
+</div>
 
 <script>
 async function publicar() {
   let codigo = document.getElementById("code").value;
 
   if (!codigo) {
-    alert("Cola algum código!");
+    alert("Insert code!");
     return;
   }
 
@@ -61,12 +150,16 @@ async function publicar() {
     body: JSON.stringify({ html: codigo })
   });
 
-  // 🔥 CORREÇÃO DO LINK
   let base = window.location.href.replace("index.html", "");
   let url = base + "view.html?id=" + id;
 
   document.getElementById("link").innerHTML =
     "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
+}
+
+function limpar() {
+  document.getElementById("code").value = "";
+  document.getElementById("link").innerHTML = "";
 }
 </script>
 
