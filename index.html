@@ -12,7 +12,6 @@ body {
   text-align: center;
   padding: 20px;
 }
-
 textarea {
   width: 90%;
   height: 200px;
@@ -20,7 +19,6 @@ textarea {
   padding: 10px;
   border: none;
 }
-
 button {
   padding: 12px 20px;
   margin-top: 10px;
@@ -30,7 +28,6 @@ button {
   color: white;
   font-size: 16px;
 }
-
 a {
   color: #38bdf8;
 }
@@ -64,7 +61,9 @@ async function publicar() {
     body: JSON.stringify({ html: codigo })
   });
 
-  let url = window.location.origin + "/view.html?id=" + id;
+  // 🔥 CORREÇÃO DO LINK
+  let base = window.location.href.replace("index.html", "");
+  let url = base + "view.html?id=" + id;
 
   document.getElementById("link").innerHTML =
     "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
