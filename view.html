@@ -1,0 +1,15 @@
+<script>
+async function carregar() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  let res = await fetch("https://servidor-130c0-default-rtdb.firebaseio.com/sites/" + id + ".json");
+  let data = await res.json();
+
+  document.open();
+  document.write(data.html);
+  document.close();
+}
+
+carregar();
+</script>

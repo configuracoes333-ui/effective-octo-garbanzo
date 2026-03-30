@@ -1,0 +1,17 @@
+<script>
+async function publicar() {
+  let codigo = document.getElementById("code").value;
+
+  let id = Math.random().toString(36).substring(2, 8);
+
+  await fetch("https://servidor-130c0-default-rtdb.firebaseio.com/sites/" + id + ".json", {
+    method: "PUT",
+    body: JSON.stringify({ html: codigo })
+  });
+
+  let url = window.location.origin + "/view.html?id=" + id;
+
+  document.getElementById("link").innerHTML =
+    "<a href='" + url + "' target='_blank'>" + url + "</a>";
+}
+</script>
