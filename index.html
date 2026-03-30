@@ -1,6 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Publicador de Sites</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+textarea {
+  width: 90%;
+  height: 200px;
+  border-radius: 10px;
+  padding: 10px;
+  border: none;
+}
+
+button {
+  padding: 12px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: white;
+  font-size: 16px;
+}
+
+a {
+  color: #38bdf8;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🌐 Criador de Site</h1>
+<p>Cole seu HTML abaixo:</p>
+
+<textarea id="code" placeholder="<h1>Meu site</h1>"></textarea><br>
+
+<button onclick="publicar()">🚀 Publicar</button>
+
+<p id="link"></p>
+
 <script>
 async function publicar() {
   let codigo = document.getElementById("code").value;
+
+  if (!codigo) {
+    alert("Cola algum código!");
+    return;
+  }
 
   let id = Math.random().toString(36).substring(2, 8);
 
@@ -12,6 +67,9 @@ async function publicar() {
   let url = window.location.origin + "/view.html?id=" + id;
 
   document.getElementById("link").innerHTML =
-    "<a href='" + url + "' target='_blank'>" + url + "</a>";
+    "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
 }
 </script>
+
+</body>
+</html>
