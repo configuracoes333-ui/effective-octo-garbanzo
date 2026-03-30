@@ -186,7 +186,8 @@ async function publicar() {
     document.getElementById("link").innerHTML = "🔗 <a href='" + url + "' target='_blank'>" + url + "</a>";
     
     // Mostra mensagem de sucesso
-    
+    document.getElementById("link").innerHTML =
+"✅ Link criado:<br><a href='" + url + "' target='_blank'>" + url + "</a>";
     
   } catch (erro) {
     alert("❌ Erro ao publicar: " + erro.message);
